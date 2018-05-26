@@ -9,20 +9,26 @@ const (
 	BaseURL = "https://api.duckduckgo.com/?t=duck2go"
 )
 
-type Query struct {
+// Request to be sent
+type Request struct {
 	url      string
 	Response Response
 }
 
+// Response to the API query
 type Response struct {
 }
 
-func newQuery(s string) *Query {
-	q := &Query{generateURL(s, true, false), Response{}}
-	return q
+// NewQuery creates a Request instance
+func NewQuery(q string, json bool) *Request {
+	return &Request{generateURL(q, json), Response{}}
 }
 
-func generateURL(s string, json bool, prettyPrint bool) string {
-	url := fmt.Sprintf("%s?q=%s", BaseURL, s)
-	return url
+// generateURL for the API query
+func generateURL(s string, json bool) string {
+	format := "xml"
+	if json {
+		format = "json"
+	}
+	return fmt.Sprintf("%s&q=%s&format=%s", BaseURL, s, format)
 }
